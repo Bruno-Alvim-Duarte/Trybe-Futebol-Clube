@@ -11,4 +11,10 @@ export default class TeamController {
     const serviceResponse = await this.teamService.findAll();
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
+
+  async findById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const serviceResponse = await this.teamService.findById(+id);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+  }
 }
