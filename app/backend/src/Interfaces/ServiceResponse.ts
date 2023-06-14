@@ -3,7 +3,7 @@ export type ServiceReponseSuccess<T> = {
   data: T
 };
 
-type ErrorTypes = 'UNAUTHORIZED' | 'NOT FOUND' | 'INVALID_DATA';
+type ErrorTypes = 'UNAUTHORIZED' | 'NOT_FOUND' | 'INVALID_DATA';
 
 export type ServiceResponseError = {
   status: ErrorTypes,
