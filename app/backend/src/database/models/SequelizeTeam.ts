@@ -8,14 +8,14 @@ import {
 import db from '.';
 // import OtherModel from './OtherModel';
 
-class Team extends Model<InferAttributes<Team>,
-InferCreationAttributes<Team>> {
+class SequelizeTeam extends Model<InferAttributes<SequelizeTeam>,
+InferCreationAttributes<SequelizeTeam>> {
   declare id: CreationOptional<number>;
 
   declare teamName: string;
 }
 
-Team.init({
+SequelizeTeam.init({
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -44,4 +44,4 @@ Team.init({
 // Example.hasMany(OtherModel, { foreignKey: 'campoC', as: 'campoEstrangeiroC' });
 // Example.hasMany(OtherModel, { foreignKey: 'campoD', as: 'campoEstrangeiroD' });
 
-export default Team;
+export default SequelizeTeam;
