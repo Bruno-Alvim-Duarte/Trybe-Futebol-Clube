@@ -7,7 +7,7 @@ export default class TokenGenerator implements ITokenGenerator {
   generateToken(payload: { email: string }): string {
     return this.generator.sign(
       payload,
-      process.env.JWT_SECRET as string,
+      process.env.JWT_SECRET as string || 'jwt_secret',
       { expiresIn: '1d', algorithm: 'HS256' },
     );
   }
