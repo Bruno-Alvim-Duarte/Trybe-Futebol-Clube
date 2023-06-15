@@ -1,9 +1,9 @@
 export type ServiceReponseSuccess<T> = {
-  status: 'SUCCESSFUL',
+  status: 'SUCCESSFUL' | 'CREATED',
   data: T
 };
 
-type ErrorTypes = 'UNAUTHORIZED' | 'NOT_FOUND' | 'INVALID_DATA';
+type ErrorTypes = 'UNAUTHORIZED' | 'NOT_FOUND' | 'INVALID_DATA' | 'UNPROCESSABLE';
 
 export type ServiceResponseError = {
   status: ErrorTypes,

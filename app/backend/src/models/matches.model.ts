@@ -1,3 +1,4 @@
+import IMatch from '../Interfaces/Match';
 import updateMatchBody from '../Interfaces/updateMatchbody';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/SequelizeMatch';
@@ -26,6 +27,10 @@ export default class MatchModel {
     return matches;
   }
 
+  async findByHomeAndAwayId(homeTeamId: number, awayTeamId: number) {
+    return this.sequelizeMatch.findOne({ where: { homeTeamId, awayTeamId } });
+  }
+
   async finishMatch(id: number) {
     return this.sequelizeMatch.update({ inProgress: false }, { where: { id } });
   }
@@ -35,5 +40,9 @@ export default class MatchModel {
     id: number,
   ) {
     return this.sequelizeMatch.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  }
+
+  async createMatch(match: IMatch): Promise<Omit<IMatch, 'inProgress'>> {
+    return this.sequelizeMatch.create({ ...match, inProgress: true });
   }
 }
