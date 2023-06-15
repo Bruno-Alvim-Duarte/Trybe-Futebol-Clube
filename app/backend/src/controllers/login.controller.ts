@@ -20,15 +20,16 @@ export default class LoginController {
     const { authorization } = req.headers;
 
     if (!authorization) {
-      return res.status(401).json({ message: 'Token not found' });
+      return res.status(mapStatusHTTP('UNAUTHORIZED')).json({ message: 'Token not found' });
     }
 
     try {
       const decode = this.tokenGenerator.verifyToken(authorization) as JwtPayload;
 
-      return res.status(200).json({ role: decode.role });
+      return res.status(mapStatusHTTP('SUCCESSFUL')).json({ role: decode.role });
     } catch (err) {
-      return res.status(401).json({ message: 'Token must be a valid token' });
+      return res.status(mapStatusHTTP('UNAUTHORIZED'))
+        .json({ message: 'Token must be a valid token' });
     }
   }
 }
