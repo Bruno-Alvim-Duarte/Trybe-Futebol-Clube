@@ -1,3 +1,4 @@
+import updateMatchBody from '../Interfaces/updateMatchbody';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/SequelizeMatch';
 
@@ -27,5 +28,12 @@ export default class MatchModel {
 
   async finishMatch(id: number) {
     return this.sequelizeMatch.update({ inProgress: false }, { where: { id } });
+  }
+
+  async updateMatch(
+    { homeTeamGoals, awayTeamGoals }: updateMatchBody,
+    id: number,
+  ) {
+    return this.sequelizeMatch.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
   }
 }
