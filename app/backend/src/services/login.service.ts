@@ -14,13 +14,10 @@ export default class LoginService {
 
   async login(email: string, password: string): Promise<ServiceResponse<{ token: string }>> {
     const user: IUser | null = await this.loginModel.findByEmail(email);
-    console.log(user);
-    console.log(password);
     if (!user) {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
     const isPasswordValid = await this.encrypter.compare(password, user.password);
-    console.log(isPasswordValid);
     if (!isPasswordValid) {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }

@@ -7,13 +7,14 @@ import { app } from '../app';
 
 import { Response } from 'superagent';
 import SequelizeUser from '../database/models/SequelizeUser';
-import { bodyInvalidEmail, bodyInvalidPass, bodyWithoutEmail, bodyWithoutPass, userMock, validBody, validBodyWrongPass } from './mocks/login.mock';
+import { bodyInvalidEmail, bodyInvalidPass, bodyWithoutEmail, bodyWithoutPass, jwtTokenAdmin, userMock, validBody, validBodyWrongPass } from './mocks/login.mock';
+import TokenGenerator from '../utils/TokenGenerator';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Teams', () => {
+describe('Login', () => {
   /**
    * Exemplo do uso de stubs com tipos
    */
@@ -95,4 +96,25 @@ describe('Teams', () => {
       expect(response.body).to.have.key('message');
     })
    })
+
+   describe('get /login/role', () => {
+    it('deveria retornar a role correta', async () => {
+      const response = await chai.request(app).get('/login/role').set('Authorization', jwtTokenAdmin);
+
+      expect(response.status).to.be.eq(200);
+      expect(response.body.role).to.be.eq('admin');
+    })
+    it ('deveria retornar erro ao tentar buscar uma role sem o token', async () => {
+      const response = await chai.request(app).get('/login/role').send();
+
+      expect(response.status).to.be.eq(401);
+      expect(response.body).to.have.key('message');
+    })
+    it ('deveria retornar erro ao tentar buscar uma role com um token invalido', async () => {
+      const response = await chai.request(app).get('/login/role').set('Authorization', 'invalido');
+
+      expect(response.status).to.be.eq(401);
+      expect(response.body).to.have.key('message');
+    })
+  })
 });
