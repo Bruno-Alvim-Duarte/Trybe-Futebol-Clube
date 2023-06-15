@@ -7,8 +7,8 @@ export default class MatchService {
     private matchModel = new MatchModel(),
   ) {}
 
-  async findAll(): Promise<ServiceResponse<SequelizeMatch[]>> {
-    const matches = await this.matchModel.findAll();
+  async findAll(inProgress: boolean | undefined): Promise<ServiceResponse<SequelizeMatch[]>> {
+    const matches = await this.matchModel.findAll(inProgress);
     return { status: 'SUCCESSFUL', data: matches };
   }
 }
