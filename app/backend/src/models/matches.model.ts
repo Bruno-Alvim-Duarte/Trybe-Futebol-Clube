@@ -24,4 +24,8 @@ export default class MatchModel {
            { model: SequelizeTeam, as: 'awayTeam', attributes: { exclude: ['id'] } }] });
     return matches;
   }
+
+  async finishMatch(id: number) {
+    return this.sequelizeMatch.update({ inProgress: false }, { where: { id } });
+  }
 }
