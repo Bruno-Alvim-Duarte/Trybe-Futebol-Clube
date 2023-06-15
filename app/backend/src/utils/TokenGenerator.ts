@@ -4,7 +4,7 @@ import ITokenGenerator from '../Interfaces/TokenGenerator';
 export default class TokenGenerator implements ITokenGenerator {
   private generator = jwt;
 
-  generateToken(payload: { email: string }): string {
+  generateToken(payload: { email: string, role: string }): string {
     return this.generator.sign(
       payload,
       process.env.JWT_SECRET as string || 'jwt_secret',
@@ -13,6 +13,6 @@ export default class TokenGenerator implements ITokenGenerator {
   }
 
   verifyToken(token: string): jwt.JwtPayload | string {
-    return this.generator.verify(token, process.env.JWT_SECRET as string);
+    return this.generator.verify(token, process.env.JWT_SECRET as string || 'jwt_secret');
   }
 }

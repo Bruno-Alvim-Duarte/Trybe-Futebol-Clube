@@ -24,6 +24,7 @@ export default class LoginService {
     if (!isPasswordValid) {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
-    return { status: 'SUCCESSFUL', data: { token: this.tokenGenerator.generateToken({ email }) } };
+    return { status: 'SUCCESSFUL',
+      data: { token: this.tokenGenerator.generateToken({ email, role: user.role }) } };
   }
 }
