@@ -30,13 +30,11 @@ export default class MatchService {
   async createMatch(match: IMatch): Promise<ServiceResponse<Omit<IMatch, 'inProgress'>>> {
     const homeTeam = await this.teamModel.findById(match.homeTeamId);
     const awayTeam = await this.teamModel.findById(match.awayTeamId);
-    console.log(homeTeam, awayTeam);
     if (!homeTeam || !awayTeam) {
       return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
     }
     const matchExists = await this.matchModel
       .findByHomeAndAwayId(match.homeTeamId, match.awayTeamId);
-    console.log(matchExists);
     if (matchExists || match.homeTeamId === match.awayTeamId) {
       return { status: 'UNPROCESSABLE',
         data: { message: 'It is not possible to create a match with two equal teams' } };

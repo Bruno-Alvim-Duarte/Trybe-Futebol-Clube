@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import IMatch from '../Interfaces/Match';
 import updateMatchBody from '../Interfaces/updateMatchbody';
 import SequelizeTeam from '../database/models/SequelizeTeam';
@@ -32,9 +31,9 @@ export default class MatchModel {
     return this.sequelizeMatch.findOne({ where: { homeTeamId, awayTeamId } });
   }
 
-  async findByTeamId(teamId:number) {
+  async findHomeMatchesDoneByTeamId(teamId:number) {
     return this.sequelizeMatch.findAll(
-      { where: { [Op.or]: { homeTeamId: teamId, awayTeamId: teamId } } },
+      { where: { homeTeamId: teamId, inProgress: false } },
     );
   }
 

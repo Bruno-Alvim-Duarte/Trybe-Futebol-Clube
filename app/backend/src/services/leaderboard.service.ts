@@ -12,6 +12,8 @@ type Leaderboard = {
   totalLosses: number,
   goalsFavor: number,
   goalsOwn: number,
+  goalsBalance: number,
+  efficiency: number,
 };
 
 export default class LeaderboardService {
@@ -23,21 +25,22 @@ export default class LeaderboardService {
   async getTeamsLeaderboard(): Promise<ServiceResponse<Leaderboard[]>> {
     const teams = await this.teamModel.findAll();
     const resultPromises = teams.map(async (team) => {
-      const matches = await this.matchModel.findByTeamId(team.id);
+      const matches = await this.matchModel.findHomeMatchesDoneByTeamId(team.id);
       return {
         name: team.teamName,
-        ...LeaderboardService.formatter(matches, team.id),
+        ...LeaderboardService.formatter(matches, team.teamName),
       };
     });
-
     const result = await Promise.all(resultPromises);
-
+    result.sort(LeaderboardService.sortMethod);
     return { status: 'SUCCESSFUL', data: result };
   }
 
-  private static formatter(matches: SequelizeMatch[], teamId: number) {
-    const { wins, points, draws, losses } = LeaderboardService.matchesResults(matches, teamId);
-    const { goalsFavor, goalsOwn } = LeaderboardService.goalsResults(matches, teamId);
+  private static formatter(matches: SequelizeMatch[], teamName: string) {
+    const { wins, points, draws, losses } = LeaderboardService.matchesResults(matches, teamName);
+    const { goalsFavor, goalsOwn } = LeaderboardService.goalsResults(matches);
+    const goalsBalance = goalsFavor - goalsOwn;
+    const efficiency = LeaderboardService.getEfficiency(points, matches.length);
     return {
       totalPoints: points,
       totalGames: matches.length,
@@ -46,45 +49,53 @@ export default class LeaderboardService {
       totalLosses: losses,
       goalsFavor,
       goalsOwn,
+      goalsBalance,
+      efficiency,
     };
   }
 
-  static matchesResults(matches: SequelizeMatch[], teamId: number)
+  private static matchesResults(matches: SequelizeMatch[], teamName: string)
     : { wins: number, points: number, draws: number, losses:number } {
     const results = matches.map((match) => {
-      if (match.homeTeamId === teamId) {
-        if (match.homeTeamGoals > match.awayTeamGoals) {
-          return 'win';
-        }
-        return 'loss';
-      }
-      if (match.awayTeamGoals > match.homeTeamGoals) {
+      if (match.homeTeamGoals > match.awayTeamGoals) {
         return 'win';
       }
-      return 'loss';
+      if (match.awayTeamGoals > match.homeTeamGoals) {
+        return 'loss';
+      }
+      console.log(teamName, match.awayTeamGoals, match.homeTeamGoals);
+      return 'draw';
     });
     const wins = results.filter((result) => result === 'win').length;
-    const draws = matches.filter((match) => match.homeTeamGoals === match.awayTeamGoals).length;
+    const draws = results.filter((result) => result === 'draw').length;
+    console.log(teamName, 'draws', draws, 'wins', wins);
     const losses = results.filter((result) => result === 'loss').length;
 
     return { wins, points: wins * 3 + draws, draws, losses };
   }
 
-  static goalsResults(matches: SequelizeMatch[], teamId: number)
+  private static goalsResults(matches: SequelizeMatch[])
     : { goalsFavor: number, goalsOwn:number } {
-    const goalsFavor = matches.reduce((acc, match) => {
-      if (match.homeTeamId === teamId) {
-        return acc + match.homeTeamGoals;
-      }
-      return acc + match.awayTeamGoals;
-    }, 0);
-    const goalsOwn = matches.reduce((acc, match) => {
-      if (match.homeTeamId === teamId) {
-        return acc + match.awayTeamGoals;
-      }
-      return acc + match.homeTeamGoals;
-    }, 0);
+    const goalsFavor = matches.reduce((acc, match) => acc + match.homeTeamGoals, 0);
+    const goalsOwn = matches.reduce((acc, match) => acc + match.awayTeamGoals, 0);
 
     return { goalsFavor, goalsOwn };
+  }
+
+  private static getEfficiency(points: number, games: number): number {
+    return +((points / (games * 3)) * 100).toFixed(2);
+  }
+
+  private static sortMethod(a: Leaderboard, b: Leaderboard) {
+    if (a.totalPoints === b.totalPoints) {
+      if (a.totalVictories === b.totalVictories) {
+        if (a.goalsBalance === b.goalsBalance) {
+          return b.goalsFavor - a.goalsFavor;
+        }
+        return b.goalsBalance - a.goalsBalance;
+      }
+      return b.totalVictories - a.totalVictories;
+    }
+    return b.totalPoints - a.totalPoints;
   }
 }
