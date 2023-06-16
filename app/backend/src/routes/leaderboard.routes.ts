@@ -14,4 +14,9 @@ router.get(
   (req: Request, res: Response) => leaderboardController.getAwayTeamsLeaderboard(req, res),
 );
 
+router.get(
+  '/',
+  (req: Request, res: Response) => leaderboardController.getAllTeamsLeaderboard(req, res),
+);
+
 export default router;

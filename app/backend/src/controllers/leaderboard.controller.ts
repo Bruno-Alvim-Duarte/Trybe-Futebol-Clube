@@ -16,4 +16,9 @@ export default class LeaderboardController {
     const serviceResponse = await this.leaderboardService.getTeamsLeaderboard('away');
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
+
+  async getAllTeamsLeaderboard(req: Request, res: Response) {
+    const serviceResponse = await this.leaderboardService.getTeamsLeaderboard('both');
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+  }
 }
