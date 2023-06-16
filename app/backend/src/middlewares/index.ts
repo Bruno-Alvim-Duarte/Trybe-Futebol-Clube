@@ -32,7 +32,6 @@ export default class Middlewares {
 
       next();
     } catch (err) {
-      console.log(err);
       return res.status(mapStatusHTTP('UNAUTHORIZED'))
         .json({ message: 'Token must be a valid token' });
     }

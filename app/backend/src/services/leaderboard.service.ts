@@ -28,7 +28,7 @@ export default class LeaderboardService {
       const matches = await this.matchModel.findHomeMatchesDoneByTeamId(team.id);
       return {
         name: team.teamName,
-        ...LeaderboardService.formatter(matches, team.teamName),
+        ...LeaderboardService.formatter(matches),
       };
     });
     const result = await Promise.all(resultPromises);
@@ -36,8 +36,8 @@ export default class LeaderboardService {
     return { status: 'SUCCESSFUL', data: result };
   }
 
-  private static formatter(matches: SequelizeMatch[], teamName: string) {
-    const { wins, points, draws, losses } = LeaderboardService.matchesResults(matches, teamName);
+  private static formatter(matches: SequelizeMatch[]) {
+    const { wins, points, draws, losses } = LeaderboardService.matchesResults(matches);
     const { goalsFavor, goalsOwn } = LeaderboardService.goalsResults(matches);
     const goalsBalance = goalsFavor - goalsOwn;
     const efficiency = LeaderboardService.getEfficiency(points, matches.length);
@@ -54,7 +54,7 @@ export default class LeaderboardService {
     };
   }
 
-  private static matchesResults(matches: SequelizeMatch[], teamName: string)
+  private static matchesResults(matches: SequelizeMatch[])
     : { wins: number, points: number, draws: number, losses:number } {
     const results = matches.map((match) => {
       if (match.homeTeamGoals > match.awayTeamGoals) {
@@ -63,12 +63,10 @@ export default class LeaderboardService {
       if (match.awayTeamGoals > match.homeTeamGoals) {
         return 'loss';
       }
-      console.log(teamName, match.awayTeamGoals, match.homeTeamGoals);
       return 'draw';
     });
     const wins = results.filter((result) => result === 'win').length;
     const draws = results.filter((result) => result === 'draw').length;
-    console.log(teamName, 'draws', draws, 'wins', wins);
     const losses = results.filter((result) => result === 'loss').length;
 
     return { wins, points: wins * 3 + draws, draws, losses };
