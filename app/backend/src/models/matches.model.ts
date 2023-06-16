@@ -37,6 +37,12 @@ export default class MatchModel {
     );
   }
 
+  async findAwayMatchesDoneByTeamId(teamId:number) {
+    return this.sequelizeMatch.findAll(
+      { where: { awayTeamId: teamId, inProgress: false } },
+    );
+  }
+
   async finishMatch(id: number) {
     return this.sequelizeMatch.update({ inProgress: false }, { where: { id } });
   }
