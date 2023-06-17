@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as jwt from 'jsonwebtoken';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -15,31 +16,6 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Login', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
-
-  // let chaiHttpResponse: Response;
-
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
-
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
 
   beforeEach(() => {
     sinon.restore();
@@ -99,9 +75,12 @@ describe('Login', () => {
 
    describe('get /login/role', () => {
     it('deveria retornar a role correta', async () => {
+      sinon.stub(TokenGenerator.prototype, 'verifyToken').returns({ email: 'bruno@gmail.com', role: 'admin'})
+
       const response = await chai.request(app).get('/login/role').set('Authorization', jwtTokenAdmin);
 
       expect(response.status).to.be.eq(200);
+      console.log(response.body);
       expect(response.body.role).to.be.eq('admin');
     })
     it ('deveria retornar erro ao tentar buscar uma role sem o token', async () => {
