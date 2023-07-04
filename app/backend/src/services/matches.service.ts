@@ -33,9 +33,7 @@ export default class MatchService {
     if (!homeTeam || !awayTeam) {
       return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
     }
-    const matchExists = await this.matchModel
-      .findByHomeAndAwayId(match.homeTeamId, match.awayTeamId);
-    if (matchExists || match.homeTeamId === match.awayTeamId) {
+    if (match.homeTeamId === match.awayTeamId) {
       return { status: 'UNPROCESSABLE',
         data: { message: 'It is not possible to create a match with two equal teams' } };
     }

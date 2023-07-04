@@ -62,6 +62,14 @@ export const matchesWith16InAway = [
     "awayTeamId": 16,
     "awayTeamGoals": 6,
     "inProgress": false,
+  },
+  {
+    "id": 54,
+    "homeTeamId": 3,
+    "homeTeamGoals": 1,
+    "awayTeamId": 16,
+    "awayTeamGoals": 1,
+    "inProgress": false,
   }
 ]
 
@@ -80,6 +88,38 @@ export const matchesWith16InBoth = [
     "homeTeamGoals": 1,
     "awayTeamId": 16,
     "awayTeamGoals": 10,
+    "inProgress": false,
+  },
+  {
+    "id": 45,
+    "homeTeamId": 7,
+    "homeTeamGoals": 1,
+    "awayTeamId": 16,
+    "awayTeamGoals": 1,
+    "inProgress": false,
+  },
+  {
+    "id": 32,
+    "homeTeamId": 16,
+    "homeTeamGoals": 1,
+    "awayTeamId": 7,
+    "awayTeamGoals": 2,
+    "inProgress": false,
+  },
+  {
+    "id": 33,
+    "homeTeamId": 16,
+    "homeTeamGoals": 2,
+    "awayTeamId": 7,
+    "awayTeamGoals": 2,
+    "inProgress": false,
+  },
+  {
+    "id": 33,
+    "homeTeamId": 8,
+    "homeTeamGoals": 3,
+    "awayTeamId": 16,
+    "awayTeamGoals": 2,
     "inProgress": false,
   }
 ]
@@ -112,3 +152,17 @@ export const matchesDone = [
     "inProgress": false,
   },
 ]
+
+export const matchRequestBody = {
+  "homeTeamId": 16,
+  "awayTeamId": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+}
+
+export const matchRequestBodyInvalid = {
+  "homeTeamId": 16, // id's iguais 
+  "awayTeamId": 16, // unprocessable
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+}

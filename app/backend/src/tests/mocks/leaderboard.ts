@@ -16,29 +16,29 @@ export const expectedResultHome = [
 export const expectedResultAway = [
   {
     name: 'Santos',
-    totalPoints: 6,
-    totalGames: 2,
+    totalPoints: 7,
+    totalGames: 3,
     totalVictories: 2,
-    totalDraws: 0,
+    totalDraws: 1,
     totalLosses: 0,
-    goalsFavor: 9,
-    goalsOwn: 6,
+    goalsFavor: 10,
+    goalsOwn: 7,
     goalsBalance: 3,
-    efficiency: 100
+    efficiency: 77.78
   }
 ]
 
 export const expectedResultBoth = [
   {
     name: 'Santos',
-    totalPoints: 6,
-    totalGames: 2,
+    totalPoints: 8,
+    totalGames: 6,
     totalVictories: 2,
-    totalDraws: 0,
-    totalLosses: 0,
-    goalsFavor: 22,
-    goalsOwn: 5,
-    goalsBalance: 17,
-    efficiency: 100
+    totalDraws: 2,
+    totalLosses: 2,
+    goalsFavor: 28,
+    goalsOwn: 13,
+    goalsBalance: 15,
+    efficiency: 44.44
   }
 ]
